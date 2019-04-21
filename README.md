@@ -1,5 +1,5 @@
 # ST-Project
-How to execute the executable?
+How to run the game?
 ```
 python3 Hangman_class_version.py
 ```
