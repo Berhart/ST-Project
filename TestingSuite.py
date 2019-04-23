@@ -9,6 +9,7 @@ class TestHangmanGame(unittest.TestCase):
       self.available_letters = self.game._available_letters.copy()
    
    def test_winGameWith0ErrorsAndGuessingAllCorrectLetters(self):
+      self.game.print_introduction()
       for el in self.available_letters:
          self.assertEqual(self.game._finished, False)
          self.game.try_add_guess(el)
@@ -50,6 +51,36 @@ class TestHangmanGame(unittest.TestCase):
       self.assertEqual(self.game._finished, False)
       self.assertEqual(self.game._number_of_errors, 0)
       self.assertEqual(self.game._number_of_trials, 0)   
+      
+   def test_InputNotAllowedDoesNotChangeTheStateOfTheGame(self):
+      #if the input has more than one character and it doesnt have the length of
+      #the secret word
+      self.assertEqual(self.game._finished, False)
+      self.game.try_add_guess("secret_wordd")
+      self.assertEqual(self.game._finished, False)
+      self.game.try_add_guess("secret_wor")
+      self.assertEqual(self.game._finished, False)
+      self.assertEqual(self.game._number_of_errors, 0)
+      self.assertEqual(self.game._number_of_trials, 0)   
+   
+   def test_mistakenSecretWordInput(self):
+      self.assertEqual(self.game._finished, False)
+      self.game.try_add_guess("secret word")
+      self.assertEqual(self.game._finished, False)
+      self.assertEqual(self.game._number_of_errors, 1)
+      self.assertEqual(self.game._number_of_trials, 1)
+      
+   def test_loseGameWith11TrialsAndFinalGuessBeingAMistakenSecretWord(self):
+      for i in range(len(self.game._secret_word)-1):
+         #print(i)
+         self.game.try_add_guess(str(i))
+         self.assertEqual(self.game._finished, False)
+      self.game.try_add_guess("secret word")
+      
+      self.assertEqual(self.game._finished, True)
+      self.assertEqual(self.game._number_of_errors, 11)
+      self.assertEqual(self.game._number_of_trials, 11)
+   
 
 def suite():
    

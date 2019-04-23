@@ -1,3 +1,4 @@
+import sys
 class Hangman():
   
   def __init__(self, plain_word):
@@ -162,5 +163,5 @@ class Hangman():
     print("\n\n\nGuess the word\n")
     self.print_guess()      
       
-if __name__ == '__main__':
-  Hangman("secret_word").play()
+if __name__ == '__main__':  
+  Hangman(sys.argv[1]).play()
