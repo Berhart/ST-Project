@@ -1,4 +1,8 @@
 # ST-Project
+## Pre requisites
+
+- [Python3.6](https://www.python.org/download/releases/3.0/)
+
 ## How to run the game?
 ```
 python3 Hangman_class_version.py
