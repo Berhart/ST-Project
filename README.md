@@ -1,13 +1,13 @@
 # ST-Project
-##How to run the game?
+## How to run the game?
 ```
 python3 Hangman_class_version.py
 ```
-##How to execute the test suite?
+## How to execute the test suite?
 ```
 python3 -m unittest -b -v TestingSuite.py
 ```
-##How to calculate the code coverage?
+## How to calculate the code coverage?
 To calculate the code coverage, a new package needs to be installed. To install the package, run the following command on shell:
 ```
 pip3 install coverage
