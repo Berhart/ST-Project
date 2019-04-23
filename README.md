@@ -2,6 +2,7 @@
 ## Pre requisites
 
 - [Python3.6](https://www.python.org/download/releases/3.0/)
+- [Coverage.py](https://coverage.readthedocs.io/en/v4.5.x/)
 
 ## How to run the game?
 ```
