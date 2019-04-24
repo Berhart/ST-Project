@@ -1,7 +1,7 @@
 # ST-Project
 ##How to run the game?
 ```
-python3 Hangman_class_version.py
+python3 Hangman_class_version.py <secret_word>
 ```
 ##How to execute the test suite?
 ```
