@@ -6,6 +6,7 @@ class Hangman():
     self._secret_word = list(plain_word_capitals)     
     self._correct_guess = [None]*len(plain_word_capitals) #current guess of the user
     self._available_letters = set(plain_word_capitals) #set of right letters availabe
+    self._letters_tried = []
     self._number_of_errors = 0
     self._number_of_trials = 0
     self._finished = False #flag if the game is finished
@@ -19,6 +20,10 @@ class Hangman():
     
     if (self._number_of_errors == 11):
         print("\nYOU LOST!!")
+        print("The correct word was: ", end="")
+        for i in range(len(self._secret_word)):
+        	print(self._secret_word[i], end="")
+        print("");
     else:
         print("\nYOU WON!!!")
     print("Total Errors:    ", self._number_of_errors)
@@ -31,11 +36,13 @@ class Hangman():
     
     elif (len(guess) == 1): # if the input is only a character
       guess = guess.upper()
+     
       if (guess in self._available_letters):
         for i in range(len(self._secret_word)):
           if (self._secret_word[i] == guess):
             self._correct_guess[i] = guess
         
+        self._letters_tried.append(guess)
         self._number_of_trials += 1       
         self.print_hangman()
         self.print_guess()
@@ -46,8 +53,9 @@ class Hangman():
         
         return
         
-      else: #If the user repeats a previously letter or the secret word doesnt not contain the letter given, it will be considered as an error
+      else: #The secret word doesnt contain the letter given, it will be considered as an error
         print("Char not found!")
+        self._letters_tried.append(guess)
         self._number_of_errors += 1
         self._number_of_trials += 1
         self.print_hangman()
@@ -90,6 +98,10 @@ class Hangman():
               print ("_  ",end = "")
           else:
               print (self._correct_guess[i]+ " ", end="")
+      print()
+      print("Letters tried : ", end="")
+      for i in range(len(self._letters_tried)):
+      	print(self._letters_tried[i] + "  ", end="")
       print()
                 
   def print_hangman(self): #print the hangman
