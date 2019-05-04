@@ -16,25 +16,12 @@ class Hangman():
         self._number_of_trials = 0
         self._finished = False #flag if the game is finished
 
-    def restart_game(self):
-        check = False
-        while(not check):
-            response = input("\nDo you want to play another game(Y/N)? ").upper()
-            if(response =="N" or response == "Y"):
-                if(response =="N"):
-                    exit()
-                    #check = True
-                else:
-                    Hangman().play()
-                    check = True
-            print("Character not Valid. Please insert S or N")
-
-    def play(self):
+    def play(self):#REQ4.1
         self.print_introduction()
         while(not self._finished):
             guess = input("\nInsert new letter or the final word: ")
             self.try_add_guess(guess)
-        if (self._number_of_errors == Hangman.NUM_TRIAL):
+        if (self._number_of_errors == Hangman.NUM_TRIAL): #REQ4.2
             print("\nYOU LOST!!")
             print("The correct word was: ", end="")
             for i in range(len(self._secret_word)):
@@ -44,20 +31,23 @@ class Hangman():
             print("\nYOU WON!!!")
         print("Total Errors:    ", self._number_of_errors)
         print("Number of trials: ", self._number_of_trials)
-        self.restart_game()
-
 
     def try_add_guess(self, guess): # main function to check if inserted guess is valid
-        if (guess == None or len(guess) == 0):
-            print("Empty (string) input.\nWarning: This game only accepts 2 types of guesses: 1 character or the secret word. This will not count as an error neither as a trial.")
+        if (guess == None or len(guess) == 0): #REQ2.1
+            print("Empty (string) input.\nWarning: This game only accepts 2 types of guesses: 1 character or the secret word.\nThis will not count as an error neither as a trial.\nPlease choose another letter")
             return #if no input was given then ask again for an input. This is not considered as an error or trial
-
+        
+        elif not(self.strHasOnlyLetters(guess)): #REQ2.2 and REQ3.2
+            print("Numbers or special characters are not allowed in this game.\nThis will not count as an error neither as a trial.\nPlease choose another letter")
+            return
+        
         elif (len(guess) == 1): # if the input is only a character
-            guess = guess.upper()
-            if (guess in self._letters_tried):
-                print("Character already tried. Please chose another letter")
-                self.print_hangman()
-                self.print_guess()
+            guess = guess.upper() #REQ2.7
+            
+            if (guess in self._letters_tried): # REQ2.5
+                print("Character already tried.\nThis won't count as an error or trial.\nPlease choose another letter")
+                self.print_hangman() # REQ2.4
+                self.print_guess() # REQ2.4
                 return
             else:
                 if (guess in self._available_letters):
@@ -67,49 +57,50 @@ class Hangman():
 
                     self._letters_tried.append(guess)
                     self._number_of_trials += 1
-                    self.print_hangman()
-                    self.print_guess()
+                    self.print_hangman() # REQ2.4
+                    self.print_guess() # REQ2.4
                     self._available_letters.remove(guess)
 
                     if(len(self._available_letters) == 0):
                         self._finished = True
 
                     return
-                else: #The secret word doesnt contain the letter given, it will be considered as an error
-                    print("Char not found!")
+                else: #REQ2.3 The secret word doesnt contain the letter given, it will be considered as an error and trial
+                    print("The secret word doesnt contain the letter given!")
                     self._letters_tried.append(guess)
-                    self._number_of_errors += 1
+                    self._number_of_errors += 1 
                     self._number_of_trials += 1
-                    self.print_hangman()
-                    self.print_guess()
-                if (self._number_of_errors == Hangman.NUM_TRIAL):
-                    self._finished = True
-                    return
+                    self.print_hangman() # REQ2.4
+                    self.print_guess() # REQ2.4
+                    if (self._number_of_errors == Hangman.NUM_TRIAL):
+                        self._finished = True
+                        return
 
         elif (len(guess) == len(self._secret_word)): #if the guess given has the same size as the secret word
-            guess = guess.upper()
+            guess = guess.upper() #REQ3.6
 
             if(list(guess) == self._secret_word): #if they have the same letters in the same order
                 for i in range(len(self._secret_word)):
                     self._correct_guess[i] = self._secret_word[i]
                 self._number_of_trials += 1
-                self.print_guess()
+                self.print_guess() # REQ2.4
                 self._finished = True
                 return
 
-            else:
+            else: #REQ3.3
                 print("The given guess does not match the secret word")
                 self._number_of_errors += 1
                 self._number_of_trials += 1
                 self.print_hangman()
-                self.print_guess()
+                self.print_guess() # REQ2.4
                 if (self._number_of_errors == Hangman.NUM_TRIAL):
                     self._finished = True
                     return
 
-        else: # This is not considered as an error neither as a trial
-            print("Warning: This game only accepts 2 types of guesses: 1 character or the secret word. This will not count as an error neither as a trial.")
+        else: # REQ3.5 This is not considered as an error neither as a trial
+            print("Warning: This game only accepts 2 types of guesses: 1 character or the secret word. \nThis will not count as an error neither as a trial.\nPlease choose another letter")
             return
+        
     def print_guess(self): #print current guess
         l = len(self._correct_guess)
         print("Current Guess: ",end = "")
@@ -181,10 +172,29 @@ class Hangman():
         print("H    H     AA     N    N     GGGG    MM   MM    AA    N    N   !!")
         print("H    H    A  A    NN   N    G   GG   MMM MMM   A  A   NN   N   !!")
         print("HHHHHH   AAAAAA   N N  N    G        M MMM M  AAAAAA  N N  N   !!")
-        print("H    H   A    A   N  N N    G  GGGG  M     M  A    A  N  N N   ")
+        print("H    H   A    A   N  N N    G  GGGG  M     M  A    A  N  N N   !!")
         print("H    H   A    A   N   NN     GGGG    M     M  A    A  N   NN   !!")
         print("\n\n\nGuess the word\n")
         self.print_guess()
+        
+    def strHasOnlyLetters(self, string):
+        hasOnlyLetter = True
+        for c in string:
+            if not((ord(c) >= ord('a') and ord(c) <= ord('z')) or (ord(c) >= ord('A') and ord(c) <= ord('Z'))):
+                return False
+        return hasOnlyLetter 
 
-if __name__ == '__main__':
+def main():
     Hangman().play()
+    while(1):
+        response = input("\nDo you want to play another game(Y/N)? ").upper()
+        if(response == "N" or response == "Y"): #REQ5.3
+            if(response =="N"):
+                return #REQ5.1
+            else:
+                Hangman().play() #REQ5.2
+        else:        
+            print("Character not Valid. Please insert Y or N")    
+
+#if __name__ == '__main__':
+ #   main()
