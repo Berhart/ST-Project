@@ -21,7 +21,11 @@ class TestHangmanGame(unittest.TestCase):
 
 	def test_winGameWith0ErrorsAnd1Trial(self):
 		self.assertEqual(self.game._finished, False)
-		self.game.try_add_guess("secret_word")
+		word = ""
+		for i in range(len(self.game._secret_word)):
+			word = word + self.game._secret_word[i]
+
+		self.game.try_add_guess(word)
 		self.assertEqual(self.game._finished, True)
 		self.assertEqual(self.game._number_of_errors, 0)
 		self.assertEqual(self.game._number_of_trials, 1)
@@ -52,7 +56,18 @@ class TestHangmanGame(unittest.TestCase):
 		self.game.try_add_guess(None)
 		self.assertEqual(self.game._finished, False)
 		self.assertEqual(self.game._number_of_errors, 0)
-		self.assertEqual(self.game._number_of_trials, 0)   
+		self.assertEqual(self.game._number_of_trials, 0)
+
+	def test_sameInputTwiceDoesNotChangeTheStateOfTheGame(self):
+
+		self.assertEqual(self.game._finished, False)
+		self.game.try_add_guess(self.notPresentLetters[0])
+		self.assertEqual(self.game._finished, False)
+		self.assertEqual(self.game._number_of_errors, 1)
+		self.assertEqual(self.game._number_of_trials, 1)
+		self.game.try_add_guess(self.notPresentLetters[0])
+		self.assertEqual(self.game._number_of_errors, 1)
+		self.assertEqual(self.game._number_of_trials, 1)
 
 	def test_InputNotAllowedDoesNotChangeTheStateOfTheGame(self):
 		#if the input has more than one character and it doesnt have the length of
@@ -63,27 +78,43 @@ class TestHangmanGame(unittest.TestCase):
 		self.game.try_add_guess("secret_wor")
 		self.assertEqual(self.game._finished, False)
 		self.assertEqual(self.game._number_of_errors, 0)
-		self.assertEqual(self.game._number_of_trials, 0)   
+		self.assertEqual(self.game._number_of_trials, 0)  
 
 	def test_mistakenSecretWordInput(self):
 		self.assertEqual(self.game._finished, False)
-		self.game.try_add_guess("secret word")
+		self.game.try_add_guess("a"*len(self.game._secret_word))
 		self.assertEqual(self.game._finished, False)
 		self.assertEqual(self.game._number_of_errors, 1)
 		self.assertEqual(self.game._number_of_trials, 1)
 
-	def test_loseGameWith11TrialsAndFinalGuessBeingAMistakenSecretWord(self):
+	def test_WordWithDifferentLengthWithSameErrors(self):
+		self.assertEqual(self.game._finished, False)
+		self.game.try_add_guess("a"*(len(self.game._secret_word)+1))
+		self.assertEqual(self.game._finished, False)
+		self.assertEqual(self.game._number_of_errors, 0)
+		self.assertEqual(self.game._number_of_trials, 0)
+
+	def test_loseGameWith11MistakenSecretWord(self):
 		print(self.game._secret_word)
 		print(self.notPresentLetters)
 		for i in range(11):
-			print(i)
-			self.game.try_add_guess()
 			self.assertEqual(self.game._finished, False)
-			self.game.try_add_guess("secret word")
+			self.game.try_add_guess("a"*len(self.game._secret_word))
 
 		self.assertEqual(self.game._finished, True)
 		self.assertEqual(self.game._number_of_errors, 11)
 		self.assertEqual(self.game._number_of_trials, 11)
+
+	def test_WinMessage(self):
+		self.game._finished = True
+		self.game.play()
+		self.assertEqual(self.game._result, "WIN")
+
+	def test_LostMessage(self):
+		self.game._finished = True
+		self.game._number_of_errors = 11
+		self.game.play()
+		self.assertEqual(self.game._result, "LOST")
 
 
 def suite():

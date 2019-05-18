@@ -15,19 +15,25 @@ class Hangman():
         self._number_of_errors = 0
         self._number_of_trials = 0
         self._finished = False #flag if the game is finished
+        self._result = "";
 
     def play(self):#REQ4.1
         self.print_introduction()
         while(not self._finished):
             guess = input("\nInsert new letter or the final word: ")
             self.try_add_guess(guess)
+
         if (self._number_of_errors == Hangman.NUM_TRIAL): #REQ4.2
+            self._result = "LOST"
             print("\nYOU LOST!!")
             print("The correct word was: ", end="")
+
             for i in range(len(self._secret_word)):
                 print(self._secret_word[i], end="")
             print("");
+
         else:
+            self._result = "WIN"
             print("\nYOU WON!!!")
         print("Total Errors:    ", self._number_of_errors)
         print("Number of trials: ", self._number_of_trials)
@@ -178,11 +184,10 @@ class Hangman():
         self.print_guess()
         
     def strHasOnlyLetters(self, string):
-        hasOnlyLetter = True
         for c in string:
             if not((ord(c) >= ord('a') and ord(c) <= ord('z')) or (ord(c) >= ord('A') and ord(c) <= ord('Z'))):
                 return False
-        return hasOnlyLetter 
+        return True
 
 def main():
     Hangman().play()
@@ -197,4 +202,4 @@ def main():
             print("Character not Valid. Please insert Y or N")    
 
 #if __name__ == '__main__':
- #   main()
+    #main()
