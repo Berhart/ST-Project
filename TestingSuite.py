@@ -97,7 +97,7 @@ class TestHangmanGame(unittest.TestCase):
 	def test_loseGameWith11MistakenSecretWord(self):
 		print(self.game._secret_word)
 		print(self.notPresentLetters)
-		for i in range(11):
+		for _ in range(11):
 			self.assertEqual(self.game._finished, False)
 			self.game.try_add_guess("a"*len(self.game._secret_word))
 
