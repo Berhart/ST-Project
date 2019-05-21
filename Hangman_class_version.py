@@ -42,7 +42,7 @@ class Hangman():
             print("Empty (string) input.\nWarning: This game only accepts 2 types of guesses: 1 character or the secret word.\nThis will not count as an error neither as a trial.\nPlease choose another letter")
             return #if no input was given then ask again for an input. This is not considered as an error or trial
         
-        elif not(self.strHasOnlyLetters(guess)): #REQ2.2 and REQ3.2
+        elif not(self.str_has_only_letters(guess)): #REQ2.2 and REQ3.2
             print("Numbers or special characters are not allowed in this game.\nThis will not count as an error neither as a trial.\nPlease choose another letter")
             return
         
@@ -182,7 +182,7 @@ class Hangman():
         print("\n\n\nGuess the word\n")
         self.print_guess()
         
-    def strHasOnlyLetters(self, string):
+    def str_has_only_letters(self, string):
         for c in string:
             if not((ord(c) >= ord('a') and ord(c) <= ord('z')) or (ord(c) >= ord('A') and ord(c) <= ord('Z'))):
                 return False
